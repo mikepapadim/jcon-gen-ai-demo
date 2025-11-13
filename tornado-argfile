@@ -7,6 +7,9 @@
 --enable-preview
 -XX:+UseParallelGC
 
+ -Dtornado.profiler=True
+
+
 # === Native library path ===
 -Djava.library.path=/home/mikepapadim/manchester/TornadoVM/bin/sdk/lib
 
