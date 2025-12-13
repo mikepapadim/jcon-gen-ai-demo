@@ -28,25 +28,24 @@
 
 
   <dependencies>
-        <dependency>
-        <groupId>tornado</groupId>
-        <artifactId>tornado-api</artifactId>
-        <version>1.1.2-dev</version>
-    </dependency>
-
+          <dependency>
+          <groupId>io.github.beehive-lab</groupId>
+          <artifactId>tornado-api</artifactId>
+          <version>2.1.0</version>
+      </dependency>
+<!-- 
      <dependency>
         <groupId>tornado</groupId>
         <artifactId>tornado-examples</artifactId>
         <version>1.1.2-dev</version>
-    </dependency>
+    </dependency> -->
 
  
-
-    <dependency>
-        <groupId>tornado</groupId>
-        <artifactId>tornado-runtime</artifactId>
-        <version>1.1.2-dev</version>
-    </dependency>  
+<dependency>
+    <groupId>io.github.beehive-lab</groupId>
+    <artifactId>tornado-runtime</artifactId>
+    <version>2.1.0</version>
+</dependency>
     <dependency>
       <groupId>junit</groupId>
       <artifactId>junit</artifactId>
