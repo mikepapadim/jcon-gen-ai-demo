@@ -14,7 +14,7 @@ import uk.ac.manchester.tornado.api.common.TornadoDevice;
 import uk.ac.manchester.tornado.api.enums.DataTransferMode;
 import uk.ac.manchester.tornado.api.exceptions.TornadoExecutionPlanException;
 import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
-import uk.ac.manchester.tornado.examples.utils.Utils;
+// import uk.ac.manchester.tornado.examples.utils.Utils;
 
 import java.util.ArrayList;
 
@@ -154,10 +154,10 @@ public class JconBackup {
 
             long[] kernelTimersLong = kernelTimers.stream().mapToLong(Long::longValue).toArray();
             long[] totalTimersLong = totalTimers.stream().mapToLong(Long::longValue).toArray();
-            System.out.println("Stats KernelTime");
-            Utils.computeStatistics(kernelTimersLong);
-            System.out.println("Stats TotalTime");
-            Utils.computeStatistics(totalTimersLong);
+            // System.out.println("Stats KernelTime");
+            // Utils.computeStatistics(kernelTimersLong);
+            // System.out.println("Stats TotalTime");
+            // Utils.computeStatistics(totalTimersLong);
         } catch (TornadoExecutionPlanException e) {
             e.printStackTrace();
         }
