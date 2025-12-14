@@ -15,11 +15,13 @@ import uk.ac.manchester.tornado.api.types.arrays.FloatArray;
 import java.util.ArrayList;
 
 /**
+ * HelloGPUs4J - Your First GPU Program in Java!
+ *
  * Simple TornadoVM demo showing:
  *  1. Vector addition using @Parallel annotation
  *  2. The same computation using KernelContext and explicit Grid configuration
  */
-public class JconBackup {
+public class HelloGPUs4J {
 
     // ------------------------------
     // 1. Simple Parallel Vector Add
@@ -46,7 +48,7 @@ public class JconBackup {
     // 3. Main Execution
     // -----------------
     public static void main(String[] args) {
-        System.out.println("Welcome to TornadoVM");
+        System.out.println("Hello GPU! Welcome to TornadoVM");
 
         // Allocate three FloatArrays of length 100
         FloatArray a = new FloatArray(100);
@@ -66,7 +68,7 @@ public class JconBackup {
         tg.transferToDevice(DataTransferMode.EVERY_EXECUTION, a, b);
 
         // Add computation task (uses @Parallel version)
-        tg.task("t0", JconBackup::vectorAdd, a, b, c);
+        tg.task("t0", HelloGPUs4J::vectorAdd, a, b, c);
 
         // Bring result back to host
         tg.transferToHost(DataTransferMode.EVERY_EXECUTION, c);
@@ -110,7 +112,7 @@ public class JconBackup {
         // Create another task graph for kernel-based version
         TaskGraph taskGraph = new TaskGraph("s1");
         taskGraph.transferToDevice(DataTransferMode.EVERY_EXECUTION, newA, b);
-        taskGraph.task("t2", JconBackup::vectorAddKernel, kernelContext, newA, b, updateOutput);
+        taskGraph.task("t2", HelloGPUs4J::vectorAddKernel, kernelContext, newA, b, updateOutput);
         taskGraph.transferToHost(DataTransferMode.EVERY_EXECUTION, updateOutput);
 
         ImmutableTaskGraph immutableTaskGraph1 = taskGraph.snapshot();

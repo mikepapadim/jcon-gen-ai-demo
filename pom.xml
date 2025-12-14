@@ -23,7 +23,7 @@
           <arg>--enable-preview</arg>
         </compilerArgs>
         <includes>
-          <include>JconBackup.java</include>
+          <include>HelloGPUs4J.java</include>
         </includes>
       </configuration>
     </plugin>

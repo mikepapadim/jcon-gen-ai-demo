@@ -2,12 +2,12 @@
 
 **Run Java code on OpenCL GPUs with zero code changes!** This demo shows how TornadoVM makes GPU programming as simple as writing regular Java.
 
-**Just ONE file.** That's all you need to see. `JconBackup.java` - a single, self-contained example that runs on your GPU.
+**Just ONE file.** That's all you need to see. `HelloGPUs4J.java` - a single, self-contained example that runs on your GPU.
 
 ```
 jcon-gen-ai-demo/
-├── JconBackup.java    ← Your GPU program (that's it!)
-├── pom.xml            ← Dependencies
+├── HelloGPUs4J.java   ← Your GPU program (that's it!)
+├── pom.xml            ← Dependencies (optional with Maven)
 └── README.md          ← You are here
 ```
 
@@ -70,27 +70,41 @@ tornado --version
 
 ## 🎮 Run Your First GPU Program
 
-### Option 1: Use TornadoVM SDK configuration (Recommended)
+### Option 1: With Maven (Easiest)
 
 ```bash
 # Build the single Java file
 mvn clean package -DskipTests
 
-# Run on GPU using TornadoVM's configuration!
-java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar JconBackup
+# Run on GPU!
+java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar HelloGPUs4J
 ```
 
-### Option 2: Use local configuration file
+### Option 2: Without Maven (Just javac!)
+
+No Maven? No problem! Compile and run with just `javac`:
+
+```bash
+# Compile directly
+javac --enable-preview --source 21 \
+  --module-path $TORNADO_SDK/share/java/tornado:$TORNADO_SDK/share/java/graalJars \
+  HelloGPUs4J.java
+
+# Run on GPU!
+java @$TORNADO_SDK/bin/tornado-argfile HelloGPUs4J
+```
+
+### Option 3: Local tornado-argfile
 
 ```bash
 # Copy tornado-argfile to project directory (one-time setup)
 cp $TORNADO_SDK/bin/tornado-argfile .
 
-# Build
+# Build with Maven
 mvn clean package -DskipTests
 
-# Run on GPU!
-java @tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar JconBackup
+# Run with local config
+java @tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar HelloGPUs4J
 ```
 
 **That's it!** Your Java code is now running on the GPU.
@@ -124,7 +138,7 @@ TornadoVM sees the `@Parallel` annotation and automatically:
 ```java
 TaskGraph tg = new TaskGraph("s0")
     .transferToDevice(DataTransferMode.EVERY_EXECUTION, a, b)  // Send data to GPU
-    .task("t0", JconBackup::vectorAdd, a, b, c)                // Define computation
+    .task("t0", HelloGPUs4J::vectorAdd, a, b, c)               // Define computation
     .transferToHost(DataTransferMode.EVERY_EXECUTION, c);      // Get results back
 ```
 Think of it as a recipe: what data to move, what computation to run, what results to retrieve.
@@ -157,7 +171,7 @@ Just annotate your loop. TornadoVM handles thread mapping, work distribution, ev
 ## 📊 What You'll See
 
 ```
-Welcome to TornadoVM
+Hello GPU! Welcome to TornadoVM
 Output after first vectorAdd:
 30.0 30.0 30.0 30.0 30.0 ... (100 elements)
 
@@ -174,9 +188,9 @@ This demo showcases **both** approaches in one file:
 
 Both produce the same result, but KernelContext gives you fine-grained control over thread scheduling, similar to writing CUDA kernels.
 
-## 🎓 What's Inside JconBackup.java?
+## 🎓 What's Inside HelloGPUs4J.java?
 
-**Everything you need in ONE file!** Just open [`JconBackup.java`](JconBackup.java) in the root directory.
+**Everything you need in ONE file!** Just open [`HelloGPUs4J.java`](HelloGPUs4J.java) in the root directory.
 
 The demo includes:
 - ✅ Parallel vector addition with `@Parallel` (Lines 26-31)
@@ -221,7 +235,7 @@ This will list all OpenCL-compatible devices on your system (GPUs, CPUs, etc.)
 Want to do more?
 
 1. **Try different devices**: `tornado --devices` lists all available accelerators
-2. **Add profiling**: Uncomment the performance stats at the bottom of JconBackup.java
+2. **Add profiling**: Uncomment the performance stats at the bottom of HelloGPUs4J.java
 3. **Write your own kernel**: Modify the vector addition to do multiplication, matrix ops, etc.
 4. **Learn more**: Visit [TornadoVM Documentation](https://tornadovm.readthedocs.io/)
 
