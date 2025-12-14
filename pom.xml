@@ -9,6 +9,7 @@
   <url>http://maven.apache.org</url>
 
 <build>
+  <sourceDirectory>.</sourceDirectory>
   <plugins>
     <!-- Java compiler plugin -->
     <plugin>
@@ -21,6 +22,9 @@
         <compilerArgs>
           <arg>--enable-preview</arg>
         </compilerArgs>
+        <includes>
+          <include>JconBackup.java</include>
+        </includes>
       </configuration>
     </plugin>
   </plugins>

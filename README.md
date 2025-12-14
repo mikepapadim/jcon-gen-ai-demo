@@ -2,11 +2,21 @@
 
 **Run Java code on OpenCL GPUs with zero code changes!** This demo shows how TornadoVM makes GPU programming as simple as writing regular Java.
 
+**Just ONE file.** That's all you need to see. `JconBackup.java` - a single, self-contained example that runs on your GPU.
+
+```
+jcon-gen-ai-demo/
+├── JconBackup.java    ← Your GPU program (that's it!)
+├── pom.xml            ← Dependencies
+└── README.md          ← You are here
+```
+
 ## 🎯 What You'll Learn
 
 - Run a Java program on your GPU in literally 3 commands
 - See parallel vector addition execute on OpenCL devices
 - No CUDA knowledge required. No complex setup. Just Java.
+- Everything in one file - no complex project structure
 
 ## ⚡ Quick Start (Choose Your Platform)
 
@@ -63,11 +73,11 @@ tornado --version
 ### Option 1: Use TornadoVM SDK configuration (Recommended)
 
 ```bash
-# Build the project
+# Build the single Java file
 mvn clean package -DskipTests
 
 # Run on GPU using TornadoVM's configuration!
-java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar org.example.JconBackup
+java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar JconBackup
 ```
 
 ### Option 2: Use local configuration file
@@ -76,11 +86,11 @@ java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar org
 # Copy tornado-argfile to project directory (one-time setup)
 cp $TORNADO_SDK/bin/tornado-argfile .
 
-# Build the project
+# Build
 mvn clean package -DskipTests
 
 # Run on GPU!
-java @tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar org.example.JconBackup
+java @tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar JconBackup
 ```
 
 **That's it!** Your Java code is now running on the GPU.
@@ -157,23 +167,25 @@ Output after kernelContext vectorAdd:
 
 ## 🧠 Two Programming Models
 
-This demo showcases **both** approaches:
+This demo showcases **both** approaches in one file:
 
-1. **@Parallel Annotation** (Lines 31-36 in JconBackup.java) - Add `@Parallel` to loops, TornadoVM handles everything
-2. **KernelContext API** (Lines 41-47 in JconBackup.java) - Explicit control over GPU threads and grid configuration
+1. **@Parallel Annotation** (Lines 26-31) - Add `@Parallel` to loops, TornadoVM handles everything
+2. **KernelContext API** (Lines 36-42) - Explicit control over GPU threads and grid configuration
 
 Both produce the same result, but KernelContext gives you fine-grained control over thread scheduling, similar to writing CUDA kernels.
 
 ## 🎓 What's Inside JconBackup.java?
 
-The demo includes:
-- ✅ Parallel vector addition with `@Parallel`
-- ✅ Kernel-based implementation with `KernelContext`
-- ✅ Grid scheduling configuration
-- ✅ Performance profiling setup
-- ✅ Device selection and execution plans
+**Everything you need in ONE file!** Just open [`JconBackup.java`](JconBackup.java) in the root directory.
 
-Check out [`src/main/java/org/JconBackup.java`](src/main/java/org/JconBackup.java) to see the full implementation.
+The demo includes:
+- ✅ Parallel vector addition with `@Parallel` (Lines 26-31)
+- ✅ Kernel-based implementation with `KernelContext` (Lines 36-42)
+- ✅ Grid scheduling configuration (Lines 101-108)
+- ✅ Performance profiling setup (Lines 138-163)
+- ✅ Device selection and execution plans (Lines 139-141)
+
+No digging through folders - it's all right there!
 
 ## 🛠️ Requirements
 
