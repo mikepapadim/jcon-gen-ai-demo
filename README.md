@@ -108,6 +108,42 @@ TornadoVM sees the `@Parallel` annotation and automatically:
 
 **No kernel code. No memory management. Just Java.**
 
+### 🧩 Key Concepts Explained
+
+**TaskGraph** - Your GPU workflow container:
+```java
+TaskGraph tg = new TaskGraph("s0")
+    .transferToDevice(DataTransferMode.EVERY_EXECUTION, a, b)  // Send data to GPU
+    .task("t0", JconBackup::vectorAdd, a, b, c)                // Define computation
+    .transferToHost(DataTransferMode.EVERY_EXECUTION, c);      // Get results back
+```
+Think of it as a recipe: what data to move, what computation to run, what results to retrieve.
+
+**ExecutionPlan** - Executes your TaskGraph:
+```java
+ImmutableTaskGraph immutable = tg.snapshot();              // Freeze the graph
+TornadoExecutionPlan plan = new TornadoExecutionPlan(immutable);
+plan.execute();                                            // Run on GPU!
+```
+Takes your TaskGraph and runs it. Can run multiple times, select specific devices, enable profiling.
+
+**KernelContext** - For explicit GPU programming:
+```java
+public static void vectorAddKernel(KernelContext ctx, FloatArray a, FloatArray b, FloatArray c) {
+    int i = ctx.globalIdx;  // Which thread am I? (like CUDA's threadIdx)
+    c.set(i, a.get(i) + b.get(i));
+}
+```
+Gives you direct control over GPU threads. Use when you need fine-grained control over parallelization.
+
+**@Parallel** - The easiest way:
+```java
+for (@Parallel int i = 0; i < size; i++) {
+    // TornadoVM parallelizes this automatically
+}
+```
+Just annotate your loop. TornadoVM handles thread mapping, work distribution, everything.
+
 ## 📊 What You'll See
 
 ```
@@ -121,20 +157,12 @@ Output after kernelContext vectorAdd:
 
 ## 🧠 Two Programming Models
 
-This demo showcases **both** TornadoVM programming approaches:
+This demo showcases **both** approaches:
 
-### 1. **@Parallel Annotation** (Easiest)
-Just add `@Parallel` to your loops. TornadoVM handles the rest.
+1. **@Parallel Annotation** (Lines 31-36 in JconBackup.java) - Add `@Parallel` to loops, TornadoVM handles everything
+2. **KernelContext API** (Lines 41-47 in JconBackup.java) - Explicit control over GPU threads and grid configuration
 
-### 2. **KernelContext API** (More Control)
-Write explicit GPU kernels with fine-grained control over grid/thread configuration:
-
-```java
-public static void vectorAddKernel(KernelContext ctx, FloatArray a, FloatArray b, FloatArray c) {
-    int i = ctx.globalIdx;  // Like CUDA threadIdx
-    c.set(i, a.get(i) + b.get(i));
-}
-```
+Both produce the same result, but KernelContext gives you fine-grained control over thread scheduling, similar to writing CUDA kernels.
 
 ## 🎓 What's Inside JconBackup.java?
 
