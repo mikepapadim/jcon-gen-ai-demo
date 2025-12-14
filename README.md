@@ -60,7 +60,22 @@ tornado --version
 
 ## 🎮 Run Your First GPU Program
 
+### Option 1: Use TornadoVM SDK configuration (Recommended)
+
 ```bash
+# Build the project
+mvn clean package -DskipTests
+
+# Run on GPU using TornadoVM's configuration!
+java @$TORNADO_SDK/bin/tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar org.example.JconBackup
+```
+
+### Option 2: Use local configuration file
+
+```bash
+# Copy tornado-argfile to project directory (one-time setup)
+cp $TORNADO_SDK/bin/tornado-argfile .
+
 # Build the project
 mvn clean package -DskipTests
 
@@ -69,6 +84,8 @@ java @tornado-argfile -cp target/jcon-demo-1.0-SNAPSHOT.jar org.example.JconBack
 ```
 
 **That's it!** Your Java code is now running on the GPU.
+
+> **Note**: The `tornado-argfile` contains all the JVM options, module exports, and native library paths needed to run TornadoVM programs. Using the one from `$TORNADO_SDK/bin/` ensures you have the correct configuration for your TornadoVM installation.
 
 ## 🔥 What Just Happened?
 
@@ -135,6 +152,29 @@ Check out [`src/main/java/org/JconBackup.java`](src/main/java/org/JconBackup.jav
 - **Java 21+** with preview features enabled
 - **OpenCL-compatible device** (Intel/AMD/NVIDIA GPU, or CPU)
 - **Maven 3.6+**
+
+## 🔧 Troubleshooting
+
+### Error: Can't find tornado-argfile?
+
+Make sure you've set the `TORNADO_SDK` environment variable:
+```bash
+echo $TORNADO_SDK  # Should print the path to your TornadoVM installation
+```
+
+If it's empty, go back to the Quick Start section and set up TornadoVM first.
+
+### Error: UnsatisfiedLinkError or module not found?
+
+This usually means the paths in tornado-argfile don't match your TornadoVM installation. Always use the tornado-argfile from your `$TORNADO_SDK/bin/` directory, as it has the correct paths for your installation.
+
+### Want to see what devices are available?
+
+```bash
+tornado --devices
+```
+
+This will list all OpenCL-compatible devices on your system (GPUs, CPUs, etc.)
 
 ## 📚 Next Steps
 

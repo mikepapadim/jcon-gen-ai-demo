@@ -38,3 +38,6 @@ Desktop.ini
 *.swp
 *~
 
+# TornadoVM config (copy from $TORNADO_SDK/bin/tornado-argfile)
+tornado-argfile
+
